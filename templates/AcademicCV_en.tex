@@ -20,11 +20,13 @@
     linkcolor=black
 }
 
+\usepackage{fontawesome5}
+
 \usepackage{blindtext}
 
 \usepackage{titlesec}
-\titleformat{\section}{\large\raggedright}{}{0em}{}[\titlerule] % Rule under section titles
-\titlespacing{\section}{0pt}{0pt}{0pt}
+\titleformat{\section}{\large\bfseries\raggedright}{}{0em}{}[\titlerule]
+\titlespacing{\section}{0pt}{10pt}{4pt}
 
 \usepackage[useregional=numeric]{datetime2}
 \DTMusemodule{english}{en-GB}
@@ -40,11 +42,13 @@
 % Name and contact information
 \BLOCK{if general}\BLOCK{set data = general['en']}
 \begin{center}
-    {\large Curriculum Vitae - \VAR{ data.name }}
+    {
+        \large \textbf{Curriculum Vitae - \VAR{ data.name }} \href{https://\VAR{data.orcid}}{\faOrcid}
+    }
+    \vspace{8pt}
 
     \begin{tabular}[t]{ c c c }
         \href{mailto:\VAR{data.email}}{\VAR{data.email}} & \href{https://\VAR{data.website}}{\VAR{data.website}} \\
-        \href{https://\VAR{data.gitlab}}{\VAR{data.gitlab}} & \href{https://\VAR{data.linkedin}}{\VAR{data.linkedin}}
     \end{tabular}
 \end{center}
 \BLOCK{endif}
@@ -96,6 +100,25 @@
         \DTMdate{\VAR{data.former[station].startdate}} - \DTMdate{\VAR{data.former[station].enddate}} & \VAR{data.former[station].position}, \VAR{data.former[station].company}, \VAR{data.former[station].location} \\
     \BLOCK{ endfor }
 \BLOCK{ endif }
+\end{tabularx}
+\BLOCK{endif}
+
+%
+% Technical Skills
+%
+\BLOCK{if technical_skills}\BLOCK{set data = technical_skills['en']}
+
+\section{Technical Skills}
+\noindent
+\begin{tabularx}{\textwidth}{@{} X}
+\BLOCK{ if data.languages is not none }
+Languages: \BLOCK{ for language in data.languages }\VAR{ data.languages[language].name }\BLOCK{ if loop.last is false}, \BLOCK{ endif }\BLOCK{ endfor } \\
+\BLOCK{ endif }
+
+\BLOCK{ if data.other is not none }
+Other: \BLOCK{ for other in data.other }\VAR{ data.other[other].name }\BLOCK{ if loop.last is false}, \BLOCK{ endif }\BLOCK{ endfor } \\
+\BLOCK{ endif }
+
 \end{tabularx}
 \BLOCK{endif}
 

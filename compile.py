@@ -1,9 +1,7 @@
 #!/usr/bin/env python
 import datetime
-import glob
 import os
 import subprocess
-import tempfile
 
 import click
 import jinja2
@@ -43,12 +41,12 @@ def render_file(
 
     document = template.render(data)
 
-    with open(f"{template_name}_{language}.tex", "w") as tempfile:
+    with open(f"TjarkSievers{template_name}_{language}.tex", "w") as tempfile:
         tempfile.write(document)
 
-    subprocess.run(["latexmk", "-xelatex", f"{template_name}_{language}.tex"])
+    subprocess.run(["latexmk", "-xelatex", f"TjarkSievers{template_name}_{language}.tex"])
 
-    os.remove(f"{template_name}_{language}.tex")
+    os.remove(f"TjarkSievers{template_name}_{language}.tex")
 
 
 def load_data(
@@ -84,7 +82,7 @@ def compile_cv(
 
     for language in data["general"].keys():
         if academic_cv is True:
-            render_file(jinja_env, "academic_cv", language, data)
+            render_file(jinja_env, "AcademicCV", language, data)
 
 
 if __name__ == "__main__":
