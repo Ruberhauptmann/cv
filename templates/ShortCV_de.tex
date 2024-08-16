@@ -1,0 +1,124 @@
+% !TEX program = xelatex
+\documentclass[
+    fontsize=11pt,
+    a4paper,
+]{scrartcl}
+
+\usepackage{typearea}
+\areaset{16cm}{25cm}
+
+\usepackage{array}
+\usepackage{tabularx}
+
+\usepackage[usenames,dvipsnames]{xcolor}
+\usepackage{hyperref}
+\definecolor{linkcolour}{rgb}{0,0.2,0.6}
+\hypersetup{
+    colorlinks,
+    breaklinks,
+    urlcolor=black,
+    linkcolor=black
+}
+
+\usepackage{fontawesome5}
+
+\usepackage{titlesec}
+\titleformat{\section}{\large\bfseries\raggedright}{}{0em}{}[\titlerule]
+\titlespacing{\section}{0pt}{10pt}{4pt}
+
+\usepackage[useregional=numeric]{datetime2}
+\DTMusemodule{english}{en-GB}
+\DTMsetregional
+\DTMlangsetup{showdayofmonth=false}
+
+\newcommand{\VAR}[1]{} % Empty variable for jinja templating
+\newcommand{\BLOCK}[1]{} % Empty variable for jinja templating
+
+\begin{document}
+\pagestyle{empty}
+
+% Name and contact information
+\BLOCK{if general}\BLOCK{set data = general['de']}
+\begin{center}
+{
+    \large \textbf{Curriculum Vitae - \VAR{data.name}}
+}
+\vspace{8pt}
+
+\begin{tabular}[t]{ c c c }
+\href{mailto:\VAR{data.email}}{\VAR{data.email}} & \href{https://\VAR{data.website}}{\VAR{data.website}} \\
+\end{tabular}
+\end{center}
+\BLOCK{endif}
+
+%
+% Education
+%
+\BLOCK{if education}\BLOCK{set data = education['de']}
+
+\section{Ausbildung}
+\noindent
+\begin{tabularx}{\textwidth}{@{} m{8em} X}
+\BLOCK{ if data.current is not none }
+\BLOCK{for station in data.current}
+Seit \textsc{\DTMdate{\VAR{data.current[station].date}}} & \textbf{\VAR{data.current[station].name}}, \VAR{data.current[station].institution}, \VAR{data.current[station].location} (erwartet: \VAR{data.current[station].grade}) \\
+\BLOCK{if data.current[station].notes}
+& \VAR{data.current[station].notes} \\
+\BLOCK{ endif }
+\BLOCK{ endfor }
+\BLOCK{ endif }
+
+\BLOCK{if data.former is not none}
+\BLOCK{for station in data.former}
+\DTMdate{\VAR{data.former[station].date}} & \textbf{\VAR{data.former[station].name}}, \VAR{data.former[station].institution}, \VAR{data.former[station].location} (\VAR{data.former[station].grade}) \\
+\BLOCK{if data.former[station].notes}
+& \VAR{data.former[station].notes} \\
+\BLOCK{ endif }
+\BLOCK{endfor}
+\BLOCK{endif}
+\end{tabularx}
+\BLOCK{endif}
+
+%
+% Work experience
+%
+\BLOCK{if work_experience}\BLOCK{set data = work_experience['de']}
+
+\section{Berufserfahrung}
+\noindent
+\begin{tabularx}{\textwidth}{@{} m{8em} X}
+\BLOCK{ if data.current is not none }
+\BLOCK{ for station in data.current }
+Seit \textsc{\DTMdate{\VAR{data.current[station].startdate}}} & \textbf{\VAR{data.current[station].name}}, \VAR{data.current[station].institution}, \VAR{ data.current[station].location } \\
+\BLOCK{ endfor }
+\BLOCK{ endif }
+
+\BLOCK{ if data.current is not none }
+\BLOCK{for station in data.former}
+\DTMdate{\VAR{data.former[station].startdate}} - \DTMdate{\VAR{data.former[station].enddate}} & \VAR{data.former[station].position}, \VAR{data.former[station].company}, \VAR{data.former[station].location} \\
+\BLOCK{ endfor }
+\BLOCK{ endif }
+\end{tabularx}
+\BLOCK{endif}
+
+
+%
+% Technical Skills
+%
+\BLOCK{if technical_skills}\BLOCK{set data = technical_skills['de']}
+
+\section{Technische Skills}
+\noindent
+\begin{tabularx}{\textwidth}{@{} X}
+\BLOCK{ if data.languages is not none }
+Sprachen: \BLOCK{ for language in data.languages }\VAR{ data.languages[language].name }\BLOCK{ if loop.last is false}, \BLOCK{ endif }\BLOCK{ endfor } \\
+\BLOCK{ endif }
+
+\BLOCK{ if data.technologies is not none }
+Sonstiges: \BLOCK{ for other in data.technologies }\VAR{ data.technologies[other].name }\BLOCK{ if loop.last is false}, \BLOCK{ endif }\BLOCK{ endfor } \\
+\BLOCK{ endif }
+
+\end{tabularx}
+\BLOCK{endif}
+
+\end{document}

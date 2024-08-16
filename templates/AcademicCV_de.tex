@@ -42,7 +42,7 @@
 \pagestyle{empty}
 
 % Name and contact information
-\BLOCK{if general}\BLOCK{set data = general['en']}
+\BLOCK{if general}\BLOCK{set data = general['de']}
 \begin{center}
     {
         \large \textbf{Curriculum Vitae - \VAR{data.name}} \href{https://\VAR{data.other_links.Orcid}}{\faOrcid}
@@ -58,14 +58,14 @@
 %
 % Education
 %
-\BLOCK{if education}\BLOCK{set data = education['en']}
+\BLOCK{if education}\BLOCK{set data = education['de']}
 
-\section{Education}
+\section{Ausbildung}
 \noindent
 \begin{tabularx}{\textwidth}{@{} m{8em} X}
 \BLOCK{ if data.current is not none }
     \BLOCK{for station in data.current}
-        Since \textsc{\DTMdate{\VAR{data.current[station].date}}} & \textbf{\VAR{data.current[station].name}}, \VAR{data.current[station].institution}, \VAR{data.current[station].location} (expected: \VAR{data.current[station].grade}) \\
+        Seit \textsc{\DTMdate{\VAR{data.current[station].date}}} & \textbf{\VAR{data.current[station].name}}, \VAR{data.current[station].institution}, \VAR{data.current[station].location} (erwartet: \VAR{data.current[station].grade}) \\
         \BLOCK{if data.current[station].notes}
             & \VAR{data.current[station].notes} \\
         \BLOCK{ endif }
@@ -86,14 +86,14 @@
 %
 % Work experience
 %
-\BLOCK{if work_experience}\BLOCK{set data = work_experience['en']}
+\BLOCK{if work_experience}\BLOCK{set data = work_experience['de']}
 
-\section{Employment}
+\section{Berufserfahrung}
 \noindent
 \begin{tabularx}{\textwidth}{@{} m{8em} X}
 \BLOCK{ if data.current is not none }
     \BLOCK{ for station in data.current }
-        Since \textsc{\DTMdate{\VAR{data.current[station].startdate}}} & \textbf{\VAR{data.current[station].name}}, \VAR{data.current[station].institution}, \VAR{ data.current[station].location } \\
+        Seit \textsc{\DTMdate{\VAR{data.current[station].startdate}}} & \textbf{\VAR{data.current[station].name}}, \VAR{data.current[station].institution}, \VAR{ data.current[station].location } \\
     \BLOCK{ endfor }
 \BLOCK{ endif }
 
@@ -115,9 +115,9 @@
 %
 % Schools and conferences
 %
-\BLOCK{if schools_conferences}\BLOCK{set data = schools_conferences['en']}
+\BLOCK{if schools_conferences}\BLOCK{set data = schools_conferences['de']}
 
-\section{Schools and Conferences}
+\section{Schulen und Konferenzen}
 \noindent
 \begin{tabularx}{\textwidth}{@{} m{8em} X}
 \BLOCK{ for school in data }
@@ -133,17 +133,17 @@
 %
 % Technical Skills
 %
-\BLOCK{if technical_skills}\BLOCK{set data = technical_skills['en']}
+\BLOCK{if technical_skills}\BLOCK{set data = technical_skills['de']}
 
-\section{Technical Skills}
+\section{Technische Skills}
 \noindent
 \begin{tabularx}{\textwidth}{@{} X}
 \BLOCK{ if data.languages is not none }
-Languages: \BLOCK{ for language in data.languages }\VAR{ data.languages[language].name }\BLOCK{ if loop.last is false}, \BLOCK{ endif }\BLOCK{ endfor } \\
+Sprachen: \BLOCK{ for language in data.languages }\VAR{ data.languages[language].name }\BLOCK{ if loop.last is false}, \BLOCK{ endif }\BLOCK{ endfor } \\
 \BLOCK{ endif }
 
 \BLOCK{ if data.technologies is not none }
-Other: \BLOCK{ for other in data.technologies }\VAR{ data.technologies[other].name }\BLOCK{ if loop.last is false}, \BLOCK{ endif }\BLOCK{ endfor } \\
+Sonstige: \BLOCK{ for other in data.technologies }\VAR{ data.technologies[other].name }\BLOCK{ if loop.last is false}, \BLOCK{ endif }\BLOCK{ endfor } \\
 \BLOCK{ endif }
 
 \end{tabularx}

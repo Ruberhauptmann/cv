@@ -36,6 +36,7 @@ def render_file(
     template_name,
     language,
     data,
+    force: bool,
 ):
     template = jinja_env.get_template(f"{template_name}_{language}.tex")
 
@@ -44,7 +45,11 @@ def render_file(
     with open(f"TjarkSievers{template_name}_{language}.tex", "w") as tempfile:
         tempfile.write(document)
 
-    subprocess.run(["latexmk", "-xelatex", f"TjarkSievers{template_name}_{language}.tex"])
+    command = ["latexmk"]
+    if force:
+        command.append("-f")
+    command.append(f"TjarkSievers{template_name}_{language}.tex")
+    subprocess.run(command)
 
     os.remove(f"TjarkSievers{template_name}_{language}.tex")
 
@@ -56,7 +61,7 @@ def load_data(
         [
             os.path.splitext(filename)[0]
             for filename in os.listdir(cv_data)
-            if not filename.startswith(".")
+            if (not filename.startswith(".")) and filename.endswith(".yaml")
         ]
     )
 
@@ -68,13 +73,17 @@ def load_data(
 
 
 @click.command()
+@click.option("--force/--no-force", default=False)
 @click.option("--cv-data", default="cv-data/", type=click.Path(exists=True))
 @click.option("--templates", default="templates/", type=click.Path(exists=True))
-@click.option("--academic-cv", default=True, type=bool)
+@click.option("--academic-cv/--no-academic-cv", default=True)
+@click.option("--short-cv/--no-short-cv", default=True)
 def compile_cv(
+    force,
     cv_data,
     templates,
-    academic_cv,
+    academic_cv: bool,
+    short_cv: bool
 ):
     jinja_env = setup_jinja_environment(templates)
 
@@ -82,7 +91,9 @@ def compile_cv(
 
     for language in data["general"].keys():
         if academic_cv is True:
-            render_file(jinja_env, "AcademicCV", language, data)
+            render_file(jinja_env, "AcademicCV", language, data, force)
+        if short_cv is True:
+            render_file(jinja_env, "ShortCV", language, data, force)
 
 
 if __name__ == "__main__":
