@@ -3,6 +3,7 @@
     fontsize=11pt,
     a4paper,
 ]{scrartcl}
+\usepackage[T1]{fontenc}
 
 \usepackage{typearea}
 \areaset{16cm}{25cm}
@@ -10,14 +11,16 @@
 \usepackage{array}
 \usepackage{tabularx}
 
+\newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+
 \usepackage[usenames,dvipsnames]{xcolor}
 \usepackage{hyperref}
-\definecolor{linkcolour}{rgb}{0,0.2,0.6}
 \hypersetup{
     colorlinks,
     breaklinks,
-    urlcolor=black,
-    linkcolor=black
+    allcolors=Black,
 }
 
 \usepackage{fontawesome5}
@@ -27,7 +30,7 @@
 \nocite{*}
 
 \usepackage{titlesec}
-\titleformat{\section}{\large\bfseries\raggedright}{}{0em}{}[\titlerule]
+\titleformat{\section}{\normalsize\scshape\raggedright}{}{0em}{}[\titlerule]
 \titlespacing{\section}{0pt}{10pt}{4pt}
 
 \usepackage[useregional=numeric]{datetime2}
@@ -62,22 +65,26 @@
 
 \section{Education}
 \noindent
-\begin{tabularx}{\textwidth}{@{} m{8em} X}
+\begin{tabularx}{\textwidth}{@{} X R{8em}}
 \BLOCK{ if data.current is not none }
     \BLOCK{for station in data.current}
-        Since \textsc{\DTMdate{\VAR{data.current[station].date}}} & \textbf{\VAR{data.current[station].name}}, \VAR{data.current[station].institution}, \VAR{data.current[station].location} (expected: \VAR{data.current[station].grade}) \\
+        \textbf{\VAR{data.current[station].name}} & Since \DTMdate{\VAR{data.current[station].date}}  \\
+        \VAR{data.current[station].institution} & \VAR{data.current[station].location} \\
         \BLOCK{if data.current[station].notes}
-            & \VAR{data.current[station].notes} \\
+            \VAR{data.current[station].notes} & \\
         \BLOCK{ endif }
+        \noalign{\smallskip}
     \BLOCK{ endfor }
 \BLOCK{ endif }
 
 \BLOCK{if data.former is not none}
     \BLOCK{for station in data.former}
-        \DTMdate{\VAR{data.former[station].date}} & \textbf{\VAR{data.former[station].name}}, \VAR{data.former[station].institution}, \VAR{data.former[station].location} (\VAR{data.former[station].grade}) \\
+        \textbf{\VAR{data.former[station].name}} & \DTMdate{\VAR{data.former[station].date}}  \\
+        \VAR{data.former[station].institution} & \VAR{data.former[station].location}  \\
         \BLOCK{if data.former[station].notes}
-            & \VAR{data.former[station].notes} \\
+            \VAR{data.former[station].notes} & \\
         \BLOCK{ endif }
+        \noalign{\smallskip}
     \BLOCK{endfor}
 \BLOCK{endif}
 \end{tabularx}
@@ -90,16 +97,19 @@
 
 \section{Employment}
 \noindent
-\begin{tabularx}{\textwidth}{@{} m{8em} X}
-\BLOCK{ if data.current is not none }
-    \BLOCK{ for station in data.current }
+\begin{tabularx}{\textwidth}{@{} X R{8em}}
+\BLOCK{if data.current is not none}
+    \BLOCK{for station in data.current}
         Since \textsc{\DTMdate{\VAR{data.current[station].startdate}}} & \textbf{\VAR{data.current[station].name}}, \VAR{data.current[station].institution}, \VAR{ data.current[station].location } \\
     \BLOCK{ endfor }
+    \noalign{\smallskip}
 \BLOCK{ endif }
 
 \BLOCK{ if data.current is not none }
     \BLOCK{for station in data.former}
-        \DTMdate{\VAR{data.former[station].startdate}} - \DTMdate{\VAR{data.former[station].enddate}} & \VAR{data.former[station].position}, \VAR{data.former[station].company}, \VAR{data.former[station].location} \\
+        \textbf{\VAR{data.former[station].position}} & \DTMdate{\VAR{data.former[station].startdate}} - \DTMdate{\VAR{data.former[station].enddate}} \\
+        \VAR{data.former[station].company} & \VAR{data.former[station].location} \\
+         \noalign{\smallskip}
     \BLOCK{ endfor }
 \BLOCK{ endif }
 \end{tabularx}
@@ -117,16 +127,37 @@
 %
 \BLOCK{if schools_conferences}\BLOCK{set data = schools_conferences['en']}
 
-\section{Schools and Conferences}
+\section{Schools and Conferences Attended}
 \noindent
-\begin{tabularx}{\textwidth}{@{} m{8em} X}
 \BLOCK{ for school in data }
-\textsc{\DTMdate{\VAR{data[school].enddate}}} & \textbf{\VAR{data[school].name}}, \VAR{data[school].location} \\
-\BLOCK{ if data[school].poster_title }
- & Poster: \VAR{data[school].poster_title}
-\BLOCK{endif}
+    \begin{tabularx}{\textwidth}{@{} X R{8em}}
+        \textbf{\VAR{data[school].name}}, \VAR{data[school].location} & \textsc{\DTMdate{\VAR{data[school].enddate}}} \\
+    \end{tabularx}
+    \BLOCK{ if data[school].poster_title }
+    \begin{tabularx}{\textwidth}{@{} X}
+        Poster: \VAR{data[school].poster_title} \\
+    \end{tabularx}
+    \BLOCK{endif}
 \BLOCK{ endfor }
-\end{tabularx}
+\BLOCK{endif}
+
+%
+% Research Projects
+%
+\BLOCK{if research_projects}\BLOCK{set data = research_projects['en']}
+
+\section{Research Projects}
+\noindent
+\BLOCK{for project in data}
+    \begin{tabularx}{\textwidth}{@{} X R{8em}}
+        \textbf{\VAR{data[project].name}} & \textsc{\DTMdate{\VAR{data[project].enddate}}} \\
+    \end{tabularx}
+    \begin{tabularx}{\textwidth}{@{} X R{8em}}
+    \BLOCK{for note in data[project].notes}
+        \VAR{note} \\
+    \BLOCK{endfor}
+    \end{tabularx}
+    \BLOCK{endfor}
 \BLOCK{endif}
 
 
@@ -146,6 +177,23 @@ Languages: \BLOCK{ for language in data.languages }\VAR{ data.languages[language
 Other: \BLOCK{ for other in data.technologies }\VAR{ data.technologies[other].name }\BLOCK{ if loop.last is false}, \BLOCK{ endif }\BLOCK{ endfor } \\
 \BLOCK{ endif }
 
+\end{tabularx}
+\BLOCK{endif}
+
+%
+% Software Projects
+%
+\BLOCK{if research_software_contributions}\BLOCK{set data = research_software_contributions['en']}
+
+\section{Software Projects}
+\noindent
+\begin{tabularx}{\textwidth}{@{} X}
+    \BLOCK{for project in data}
+        \textbf{\VAR{data[project].name}} (\href{https://\VAR{data[project].link}}{\VAR{data[project].link}}) \\
+        \BLOCK{for note in data[project].notes}
+            \VAR{note} \\
+        \BLOCK{endfor}
+    \BLOCK{endfor}
 \end{tabularx}
 \BLOCK{endif}
 

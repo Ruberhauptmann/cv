@@ -74,7 +74,7 @@
 
 \BLOCK{if data.former is not none}
     \BLOCK{for station in data.former}
-        \DTMdate{\VAR{data.former[station].date}} & \textbf{\VAR{data.former[station].name}}, \VAR{data.former[station].institution}, \VAR{data.former[station].location} (\VAR{data.former[station].grade}) \\
+        \DTMdate{\VAR{data.former[station].date}} & \VAR{data.former[station].name}, \VAR{data.former[station].institution}, \VAR{data.former[station].location} (\VAR{data.former[station].grade}) \\
         \BLOCK{if data.former[station].notes}
             & \VAR{data.former[station].notes} \\
         \BLOCK{ endif }

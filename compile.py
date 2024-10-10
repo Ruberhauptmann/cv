@@ -37,6 +37,7 @@ def render_file(
     language,
     data,
     force: bool,
+    keep_tex: bool,
 ):
     template = jinja_env.get_template(f"{template_name}_{language}.tex")
 
@@ -51,7 +52,8 @@ def render_file(
     command.append(f"TjarkSievers{template_name}_{language}.tex")
     subprocess.run(command)
 
-    os.remove(f"TjarkSievers{template_name}_{language}.tex")
+    if keep_tex is False:
+        os.remove(f"TjarkSievers{template_name}_{language}.tex")
 
 
 def load_data(
@@ -78,12 +80,14 @@ def load_data(
 @click.option("--templates", default="templates/", type=click.Path(exists=True))
 @click.option("--academic-cv/--no-academic-cv", default=True)
 @click.option("--short-cv/--no-short-cv", default=True)
+@click.option("--keep-tex/--no-keep-tex", default=False)
 def compile_cv(
     force,
     cv_data,
     templates,
     academic_cv: bool,
-    short_cv: bool
+    short_cv: bool,
+    keep_tex: bool,
 ):
     jinja_env = setup_jinja_environment(templates)
 
@@ -91,9 +95,9 @@ def compile_cv(
 
     for language in data["general"].keys():
         if academic_cv is True:
-            render_file(jinja_env, "AcademicCV", language, data, force)
+            render_file(jinja_env, "AcademicCV", language, data, force, keep_tex)
         if short_cv is True:
-            render_file(jinja_env, "ShortCV", language, data, force)
+            render_file(jinja_env, "ShortCV", language, data, force, keep_tex)
 
 
 if __name__ == "__main__":
