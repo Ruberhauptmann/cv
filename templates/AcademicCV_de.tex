@@ -7,6 +7,9 @@
 \usepackage{typearea}
 \areaset{16cm}{25cm}
 
+\usepackage{enumitem}
+\setlist[itemize]{noitemsep, topsep=0pt}
+
 \usepackage{array}
 \usepackage{tabularx}
 
@@ -19,6 +22,15 @@
     urlcolor=black,
     linkcolor=black
 }
+
+\usepackage{fontspec}
+\setmainfont{texgyreheros}[
+    Extension = .otf ,
+    UprightFont = *-regular ,
+    ItalicFont = *-italic ,
+    BoldFont = *-bold ,
+    BoldItalicFont = *-bolditalic,
+]
 
 \usepackage{fontawesome5}
 
@@ -44,14 +56,14 @@
 % Name and contact information
 \BLOCK{if general}\BLOCK{set data = general['de']}
 \begin{center}
-    {
-        \large \textbf{Curriculum Vitae - \VAR{data.name}} \href{https://\VAR{data.other_links.Orcid}}{\faOrcid}
-    }
-    \vspace{8pt}
+{
+    \large \textbf{\VAR{data.name}} \href{https://\VAR{data.other_links.Orcid}}{\faOrcid}
+}
+\vspace{8pt}
 
-    \begin{tabular}[t]{ c c c }
-        \href{mailto:\VAR{data.email}}{\VAR{data.email}} & \href{https://\VAR{data.website}}{\VAR{data.website}} & \href{https://\VAR{data.other_links.Orcid}}{\VAR{data.other_links.Orcid}} \\
-    \end{tabular}
+\begin{tabular}[t]{ c c c }
+\href{mailto:\VAR{data.email}}{\VAR{data.email}} & \href{https://\VAR{data.website}}{\VAR{data.website}} & \href{https://\VAR{data.other_links.Orcid}}{\VAR{data.other_links.Orcid}} \\
+\end{tabular}
 \end{center}
 \BLOCK{endif}
 
@@ -62,23 +74,27 @@
 
 \section{Ausbildung}
 \noindent
-\begin{tabularx}{\textwidth}{@{} m{8em} X}
+\begin{tabularx}{\textwidth}{@{} X m{8em}}
 \BLOCK{ if data.current is not none }
-    \BLOCK{for station in data.current}
-        Seit \textsc{\DTMdate{\VAR{data.current[station].date}}} & \textbf{\VAR{data.current[station].name}}, \VAR{data.current[station].institution}, \VAR{data.current[station].location} (erwartet: \VAR{data.current[station].grade}) \\
-        \BLOCK{if data.current[station].notes}
-            & \VAR{data.current[station].notes} \\
-        \BLOCK{ endif }
-    \BLOCK{ endfor }
+\BLOCK{for station in data.current}
+\textbf{\VAR{data.current[station].institution}}, \VAR{data.current[station].location} &  Since \textsc{\DTMdate{\VAR{data.current[station].date}}} \\
+\VAR{data.current[station].name}\BLOCK{if data.current[station].grade}(expected: \VAR{data.current[station].grade})\BLOCK{endif} & \\
+\BLOCK{if data.current[station].notes}
+\VAR{data.current[station].notes} & \\
+\BLOCK{ endif }
+\vspace{0.8em} & \vspace{0.8em} \\
+\BLOCK{ endfor }
 \BLOCK{ endif }
 
 \BLOCK{if data.former is not none}
-    \BLOCK{for station in data.former}
-        \DTMdate{\VAR{data.former[station].date}} & \VAR{data.former[station].name}, \VAR{data.former[station].institution}, \VAR{data.former[station].location} (\VAR{data.former[station].grade}) \\
-        \BLOCK{if data.former[station].notes}
-            & \VAR{data.former[station].notes} \\
-        \BLOCK{ endif }
-    \BLOCK{endfor}
+\BLOCK{for station in data.former}
+\textbf{\VAR{data.former[station].institution}}, \VAR{data.former[station].location} & \DTMdate{\VAR{data.former[station].date}} \\
+\VAR{data.former[station].name} \BLOCK{ if data.former[station].grade }(Final grade: \VAR{data.former[station].grade})\BLOCK{ endif } & \\
+\BLOCK{if data.former[station].notes}
+\VAR{data.former[station].notes} & \\
+\BLOCK{ endif }
+\vspace{0.8em} & \vspace{0.8em} \\
+\BLOCK{endfor}
 \BLOCK{endif}
 \end{tabularx}
 \BLOCK{endif}
@@ -89,20 +105,41 @@
 \BLOCK{if work_experience}\BLOCK{set data = work_experience['de']}
 
 \section{Berufserfahrung}
-\noindent
-\begin{tabularx}{\textwidth}{@{} m{8em} X}
 \BLOCK{ if data.current is not none }
-    \BLOCK{ for station in data.current }
-        Seit \textsc{\DTMdate{\VAR{data.current[station].startdate}}} & \textbf{\VAR{data.current[station].name}}, \VAR{data.current[station].institution}, \VAR{ data.current[station].location } \\
-    \BLOCK{ endfor }
+\BLOCK{ for station in data.current }
+\noindent
+\begin{tabularx}{\textwidth}{@{} X m{8em}}
+\VAR{data.current[station].company} & Since \textsc{\DTMdate{\VAR{data.current[station].startdate}}} \\
+\textbf{\VAR{data.current[station].position}} &
+\end{tabularx}
+\BLOCK{ if data.current[station].achievements}
+\BLOCK{set achievements = data.current[station].achievements}
+\begin{itemize}
+\BLOCK{ for achievement in achievements}
+\item \VAR{achievement}
+\BLOCK{ endfor }
+\end{itemize} \vspace{1cm}
+\BLOCK{ endif }
+\BLOCK{ endfor }
 \BLOCK{ endif }
 
-\BLOCK{ if data.current is not none }
-    \BLOCK{for station in data.former}
-        \DTMdate{\VAR{data.former[station].startdate}} - \DTMdate{\VAR{data.former[station].enddate}} & \VAR{data.former[station].position}, \VAR{data.former[station].company}, \VAR{data.former[station].location} \\
-    \BLOCK{ endfor }
-\BLOCK{ endif }
+\BLOCK{ if data.former is not none }
+\BLOCK{for station in data.former}
+\noindent
+\begin{tabularx}{\textwidth}{@{} X m{8em}}
+\textbf{\VAR{data.former[station].company}} & \DTMdate{\VAR{data.former[station].startdate}} - \DTMdate{\VAR{data.former[station].enddate}} \\
+\VAR{data.former[station].position} & \\
 \end{tabularx}
+\BLOCK{ if data.former[station].achievements}
+\BLOCK{set achievements = data.former[station].achievements}
+\begin{itemize}
+\BLOCK{ for achievement in achievements}
+\item \VAR{achievement}
+\BLOCK{ endfor }
+\end{itemize} \vspace{0.8em}
+\BLOCK{ endif }
+\BLOCK{ endfor }
+\BLOCK{ endif }
 \BLOCK{endif}
 
 %
@@ -115,35 +152,39 @@
 %
 % Schools and conferences
 %
-\BLOCK{if schools_conferences}\BLOCK{set data = schools_conferences['de']}
+\BLOCK{if schools_conferences}\BLOCK{set data = schools_conferences['en']}
 
-\section{Schulen und Konferenzen}
+\section{Schools and Conferences}
 \noindent
-\begin{tabularx}{\textwidth}{@{} m{8em} X}
+\begin{tabularx}{\textwidth}{@{} X m{8em}}
 \BLOCK{ for school in data }
-\textsc{\DTMdate{\VAR{data[school].enddate}}} & \textbf{\VAR{data[school].name}}, \VAR{data[school].location} \\
+\textbf{\VAR{data[school].name}}, \VAR{data[school].location} & \textsc{\DTMdate{\VAR{data[school].enddate}}}
+\\
 \BLOCK{ if data[school].poster_title }
- & Poster: \VAR{data[school].poster_title}
+Poster: \VAR{data[school].poster_title} &
 \BLOCK{endif}
 \BLOCK{ endfor }
 \end{tabularx}
 \BLOCK{endif}
-
 
 %
 % Technical Skills
 %
 \BLOCK{if technical_skills}\BLOCK{set data = technical_skills['de']}
 
-\section{Technische Skills}
+\section{Skills}
 \noindent
 \begin{tabularx}{\textwidth}{@{} X}
 \BLOCK{ if data.languages is not none }
-Sprachen: \BLOCK{ for language in data.languages }\VAR{ data.languages[language].name }\BLOCK{ if loop.last is false}, \BLOCK{ endif }\BLOCK{ endfor } \\
+\textbf{Languages:} \BLOCK{ for language in data.languages }\VAR{ data.languages[language].name }\BLOCK{ if loop.last is false}, \BLOCK{ endif }\BLOCK{ endfor } \\
 \BLOCK{ endif }
 
-\BLOCK{ if data.technologies is not none }
-Sonstige: \BLOCK{ for other in data.technologies }\VAR{ data.technologies[other].name }\BLOCK{ if loop.last is false}, \BLOCK{ endif }\BLOCK{ endfor } \\
+\BLOCK{ if data.frameworks is not none }
+\textbf{Frameworks:} \BLOCK{ for other in data.frameworks }\VAR{ data.frameworks[other].name }\BLOCK{ if loop.last is false}, \BLOCK{ endif }\BLOCK{ endfor } \\
+\BLOCK{ endif }
+
+\BLOCK{ if data.development_tools is not none }
+\textbf{Development Tools:} \BLOCK{ for other in data.development_tools }\VAR{ data.development_tools[other].name }\BLOCK{ if loop.last is false}, \BLOCK{ endif }\BLOCK{ endfor } \\
 \BLOCK{ endif }
 
 \end{tabularx}
