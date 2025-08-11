@@ -42,6 +42,9 @@
 \DTMusemodule{english}{en-GB}
 \DTMsetregional
 \DTMlangsetup{showdayofmonth=false}
+\DTMnewdatestyle{yearonly}{
+  \renewcommand{\DTMdisplaydate}[4]{##1} % Only year
+}
 
 \newcommand{\VAR}[1]{} % Empty variable for jinja templating
 \newcommand{\BLOCK}[1]{} % Empty variable for jinja templating
@@ -64,17 +67,53 @@
 \BLOCK{endif}
 
 %
+% Education
+%
+\BLOCK{if education}\BLOCK{set data = education['en']}
+\section{Education}
+
+\BLOCK{ if data.current is not none }
+\BLOCK{for station in data.current}
+\noindent
+\textbf{\VAR{data.current[station].institution}}, \VAR{data.current[station].location} \\
+Since {\DTMsetdatestyle{yearonly}\DTMdate{\VAR{data.current[station].date}}} \\
+\VAR{data.current[station].name}\BLOCK{if data.current[station].grade}(expected: \VAR{data.current[station].grade})\BLOCK{endif}
+\BLOCK{if data.current[station].notes}
+    \VAR{data.current[station].notes}
+\BLOCK{ endif }
+\BLOCK{ endfor }
+\BLOCK{ endif }
+
+\noindent
+\BLOCK{if data.former is not none}
+\BLOCK{for station in data.former}
+\begin{tabularx}{\textwidth}{@{} X >{\raggedleft\arraybackslash}m{8em}}
+\textbf{\VAR{data.former[station].name}}, \VAR{data.former[station].institution}
+\BLOCK{if data.former[station].grade} - Grade: \VAR{data.former[station].grade} \BLOCK{ endif } &  {\DTMsetdatestyle{yearonly}\DTMdate{\VAR{data.former[station].date}}} \\
+\end{tabularx}
+\BLOCK{if data.former[station].notes}
+\begin{itemize}
+\BLOCK{ for note in data.former[station].notes }
+    \item \VAR{note}
+\BLOCK{ endfor }
+\end{itemize}
+\BLOCK{ endif }
+\BLOCK{endfor}
+\BLOCK{endif}
+\BLOCK{endif}
+
+%
 % Work experience
 %
 \BLOCK{if work_experience}\BLOCK{set data = work_experience['en']}
-
 \section{Experience}
+
+\noindent
 \BLOCK{ if data.current is not none }
 \BLOCK{ for station in data.current }
-\noindent
-\begin{tabularx}{\textwidth}{@{} X m{8em}}
-\VAR{data.current[station].company} & Since \textsc{\DTMdate{\VAR{data.current[station].startdate}}} \\
-\textbf{\VAR{data.current[station].position}} &
+\begin{tabularx}{\textwidth}{@{} X >{\raggedleft\arraybackslash}m{8em}}
+\VAR{data.current[station].company} & Since \DTMdate{\VAR{data.current[station].startdate}} \\
+\textbf{\VAR{data.current[station].position}} \\
 \end{tabularx}
 \BLOCK{ if data.current[station].achievements}
 \BLOCK{set achievements = data.current[station].achievements}
@@ -82,15 +121,16 @@
 \BLOCK{ for achievement in achievements}
 \item \VAR{achievement}
 \BLOCK{ endfor }
-\end{itemize} \vspace{1cm}
+\end{itemize}
 \BLOCK{ endif }
+\vspace{5pt}
 \BLOCK{ endfor }
 \BLOCK{ endif }
 
+\noindent
 \BLOCK{ if data.former is not none }
 \BLOCK{for station in data.former}
-\noindent
-\begin{tabularx}{\textwidth}{@{} X m{8em}}
+\begin{tabularx}{\textwidth}{@{} X >{\raggedleft\arraybackslash}m{8em}}
 \textbf{\VAR{data.former[station].company}} & \DTMdate{\VAR{data.former[station].startdate}} - \DTMdate{\VAR{data.former[station].enddate}} \\
 \VAR{data.former[station].position} & \\
 \end{tabularx}
@@ -100,42 +140,11 @@
 \BLOCK{ for achievement in achievements}
 \item \VAR{achievement}
 \BLOCK{ endfor }
-\end{itemize} \vspace{0.8em}
+\end{itemize}
 \BLOCK{ endif }
+\vspace{5pt}
 \BLOCK{ endfor }
 \BLOCK{ endif }
-\BLOCK{endif}
-
-%
-% Education
-%
-\BLOCK{if education}\BLOCK{set data = education['en']}
-
-\section{Education}
-\noindent
-\begin{tabularx}{\textwidth}{@{} X m{8em}}
-\BLOCK{ if data.current is not none }
-\BLOCK{for station in data.current}
-\textbf{\VAR{data.current[station].institution}}, \VAR{data.current[station].location} &  Since \textsc{\DTMdate{\VAR{data.current[station].date}}} \\
-\VAR{data.current[station].name}\BLOCK{if data.current[station].grade}(expected: \VAR{data.current[station].grade})\BLOCK{endif} & \\
-\BLOCK{if data.current[station].notes}
-\VAR{data.current[station].notes} & \\
-\BLOCK{ endif }
-\vspace{0.8em} & \vspace{0.8em} \\
-\BLOCK{ endfor }
-\BLOCK{ endif }
-
-\BLOCK{if data.former is not none}
-\BLOCK{for station in data.former}
-\textbf{\VAR{data.former[station].institution}}, \VAR{data.former[station].location} & \DTMdate{\VAR{data.former[station].date}} \\
-\VAR{data.former[station].name} \BLOCK{ if data.former[station].grade }(Final grade: \VAR{data.former[station].grade})\BLOCK{ endif } & \\
-\BLOCK{if data.former[station].notes}
-\VAR{data.former[station].notes} & \\
-\BLOCK{ endif }
-\vspace{0.8em} & \vspace{0.8em} \\
-\BLOCK{endfor}
-\BLOCK{endif}
-\end{tabularx}
 \BLOCK{endif}
 
 
@@ -161,7 +170,6 @@
 \end{tabularx}
 \BLOCK{endif}
 
-
 %
 % Technical Skills
 %
@@ -169,20 +177,12 @@
 
 \section{Skills}
 \noindent
-\begin{tabularx}{\textwidth}{@{} X}
-\BLOCK{ if data.languages is not none }
-\textbf{Languages:} \BLOCK{ for language in data.languages }\VAR{ data.languages[language].name }\BLOCK{ if loop.last is false}, \BLOCK{ endif }\BLOCK{ endfor } \\
-\BLOCK{ endif }
-
-\BLOCK{ if data.frameworks is not none }
-\textbf{Frameworks:} \BLOCK{ for other in data.frameworks }\VAR{ data.frameworks[other].name }\BLOCK{ if loop.last is false}, \BLOCK{ endif }\BLOCK{ endfor } \\
-\BLOCK{ endif }
-
-\BLOCK{ if data.development_tools is not none }
-\textbf{Development Tools:} \BLOCK{ for other in data.development_tools }\VAR{ data.development_tools[other].name }\BLOCK{ if loop.last is false}, \BLOCK{ endif }\BLOCK{ endfor } \\
-\BLOCK{ endif }
-
-\end{tabularx}
+\BLOCK{for title in data}
+\textbf{\VAR{title}}:
+\BLOCK{for entry in data[title]}
+\VAR{entry}\BLOCK{ if loop.last is false}, \BLOCK{ endif }
+\BLOCK{endfor}\\
+\BLOCK{endfor}
 \BLOCK{endif}
 
 \end{document}

@@ -1,0 +1,165 @@
+% !TEX program = xelatex
+\documentclass[
+    fontsize=11pt,
+    a4paper,
+]{scrartcl}
+
+\usepackage{typearea}
+\areaset{16cm}{25cm}
+
+\usepackage{enumitem}
+\setlist[itemize]{noitemsep, topsep=0pt}
+
+\usepackage{array}
+\usepackage{tabularx}
+
+\usepackage[usenames,dvipsnames]{xcolor}
+\usepackage{hyperref}
+\definecolor{linkcolour}{rgb}{0,0.2,0.6}
+\hypersetup{
+    colorlinks,
+    breaklinks,
+    urlcolor=black,
+    linkcolor=black
+}
+
+\usepackage{fontspec}
+\setmainfont{texgyreheros}[
+    Extension = .otf ,
+    UprightFont = *-regular ,
+    ItalicFont = *-italic ,
+    BoldFont = *-bold ,
+    BoldItalicFont = *-bolditalic,
+]
+
+\usepackage{fontawesome5}
+
+\usepackage{titlesec}
+\titleformat{\section}{\large\bfseries\raggedright}{}{0em}{}[\titlerule]
+\titlespacing{\section}{0pt}{10pt}{4pt}
+
+\usepackage[useregional=numeric]{datetime2}
+\DTMusemodule{english}{en-GB}
+\DTMsetregional
+\DTMlangsetup{showdayofmonth=false}
+\DTMnewdatestyle{yearonly}{
+  \renewcommand{\DTMdisplaydate}[4]{##1} % Only year
+}
+
+\newcommand{\VAR}[1]{} % Empty variable for jinja templating
+\newcommand{\BLOCK}[1]{} % Empty variable for jinja templating
+
+\begin{document}
+\pagestyle{empty}
+
+% Name and contact information
+\begin{center}
+{
+    \Large \textbf{Tjark Sievers}
+}
+\vspace{8pt}
+
+\begin{tabular}[t]{ c c c }
+\href{mailto:tjarksievers@icloud.com}{tjarksievers@icloud.com} & \href{https://tjarksievers.de}{tjarksievers.de} & \href{https://github.com/Ruberhauptmann}{github.com/Ruberhauptmann} \\
+\end{tabular}
+\end{center}
+
+%
+% Education
+%
+\section{Ausbildung}
+
+
+\noindent
+\begin{tabularx}{\textwidth}{@{} X >{\raggedleft\arraybackslash}m{8em}}
+\textbf{M.Sc. Physik}, Universität Hamburg
+ - Note: mit Auszeichnung bestanden  &  {\DTMsetdatestyle{yearonly}\DTMdate{2025-05-15}} \\
+\end{tabularx}
+\begin{itemize}
+    \item 4/2024 - 7/2024: Aufenthalt an der Uppsala University
+    \item Thesis: Superconducting Phase Stiffness and Coherence Length From a Finite Momentum Pairing Constraint
+\end{itemize}
+\begin{tabularx}{\textwidth}{@{} X >{\raggedleft\arraybackslash}m{8em}}
+\textbf{B. Sc. Physik}, Universität Hamburg
+ - Note: 1.47  &  {\DTMsetdatestyle{yearonly}\DTMdate{2022-07-01}} \\
+\end{tabularx}
+\begin{tabularx}{\textwidth}{@{} X >{\raggedleft\arraybackslash}m{8em}}
+\textbf{Abitur}, Werner-Heisenberg-Gymnasium
+ - Note: 1.5  &  {\DTMsetdatestyle{yearonly}\DTMdate{2017-07-01}} \\
+\end{tabularx}
+
+%
+% Work experience
+%
+\section{Berufserfahrung}
+
+\noindent
+
+\noindent
+\begin{tabularx}{\textwidth}{@{} X >{\raggedleft\arraybackslash}m{8em}}
+\textbf{PHYSnet, Universität Hamburg} & \DTMdate{2021-11-01} - \DTMdate{2024-03-31} \\
+Studentisch Angestellter & \\
+\end{tabularx}
+\begin{itemize}
+\item Verwaltung des IT-Hardware-Inventars (PCs, Laptops, Monitore), einschließlich Annahme, Etikettierung und Ausgabe
+\item Konzeption und Entwicklung einer webbasierten Anwendung mit Django zur Automatisierung von Inventarprozessen, wodurch manueller Aufwand reduziert wurde
+\item Containerisierung der Anwendung mit Docker und Implementierung von CI-Pipelines in GitLab zur effizienten Bereitstellung und Testautomatisierung
+\item Unterstützung von Nutzer:innen des Physnet-Clusters bei Job-Scheduling, Softwareumgebungen und allgemeinen Supportanfragen
+\end{itemize}
+\vspace{5pt}
+\begin{tabularx}{\textwidth}{@{} X >{\raggedleft\arraybackslash}m{8em}}
+\textbf{3S/HiTeC e.V.} & \DTMdate{2019-05-01} - \DTMdate{2021-09-30} \\
+IT-Support & \\
+\end{tabularx}
+\begin{itemize}
+\item Durchführung von First- und Second-Level-Support für 150 Schulen mit etwa 15.000 Geräten
+\item Ausführung von Infrastruktur-Upgrades und Rollouts vor Ort als Change Managers
+\item Installation und Wartung von Linux-Servern (Ubuntu) sowie Clients (Xubuntu/Ubuntu, Windows 10)
+\item Erstellung und Bereitstellung von maßgeschneiderten Linux-Images sowie Automatisierung von Installationsprozessen mit Ansible und Docker
+\end{itemize}
+\vspace{5pt}
+\begin{tabularx}{\textwidth}{@{} X >{\raggedleft\arraybackslash}m{8em}}
+\textbf{Musikakademie Alteglofsheim} & \DTMdate{2017-09-01} - \DTMdate{2018-08-31} \\
+FSJ Kultur & \\
+\end{tabularx}
+\vspace{5pt}
+
+
+%
+% Software Projects
+%
+
+\section{Projekte}
+\noindent
+\begin{tabularx}{\textwidth}{@{} X}
+    \textbf{quant-met} (Python)     \\ \href{https://github.com/Ruberhauptmann/quant-met}{github.com/Ruberhauptmann/quant-met}          \begin{itemize}
+            \item Softwarepaket zur Untersuchung von Supraleitung in Flachband-Systemen
+            \item Benutzt für parallele Berechnungen auf dem PHYSnet-Cluster
+            \item Vollständig getestet mit Unit und Regressionstests
+        \end{itemize}
+     \vspace{0.8em}
+    \textbf{saboga} (Python, FastAPI, MongoDB, React, TypeScript)     \\ \href{https://saboga.tjarksievers.de}{saboga.tjarksievers.de}          \begin{itemize}
+            \item Vollständige Webanwendung zur Analyse von Daten der Plattform BoardGameGeek
+            \item Sammelt und analysiert Daten zu ca. 30.000 bewerteten Spielen und ca. 9 Millionen historischen Nutzerbewertungen
+            \item Backend mit FastAPI und MongoDB zur effizienten Datenverarbeitung und -abfrage
+            \item Frontend mit React für interaktive Datenvisualisierung und -exploration
+        \end{itemize}
+     \vspace{0.8em}
+\end{tabularx}
+
+%
+% Technical Skills
+%
+
+\section{Skills}
+\noindent
+\textbf{Languages}:
+Python, C++, Bash\\
+\textbf{Web Development}:
+Django, FastAPI, HTML/CSS, React\\
+\textbf{DevOps}:
+Docker, GitLab CI/CD, GitHub Actions, Ansible, Grafana\\
+\textbf{Databases}:
+MongoDB, MariaDB/MySQL\\
+
+\end{document}
