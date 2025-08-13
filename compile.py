@@ -78,14 +78,12 @@ def load_data(
 @click.option("--force/--no-force", default=False)
 @click.option("--cv-data", default="cv-data/", type=click.Path(exists=True))
 @click.option("--templates", default="templates/", type=click.Path(exists=True))
-@click.option("--academic-cv/--no-academic-cv", default=True)
 @click.option("--short-cv/--no-short-cv", default=True)
 @click.option("--keep-tex/--no-keep-tex", default=False)
 def compile_cv(
     force,
     cv_data,
     templates,
-    academic_cv: bool,
     short_cv: bool,
     keep_tex: bool,
 ):
@@ -94,8 +92,6 @@ def compile_cv(
     data = load_data(cv_data)
 
     for language in data["general"].keys():
-        if academic_cv is True:
-            render_file(jinja_env, "AcademicCV", language, data, force, keep_tex)
         if short_cv is True:
             render_file(jinja_env, "ShortCV", language, data, force, keep_tex)
 
