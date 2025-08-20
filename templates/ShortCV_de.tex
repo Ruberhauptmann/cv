@@ -67,6 +67,51 @@
 \BLOCK{endif}
 
 %
+% Work experience
+%
+\BLOCK{if work_experience}\BLOCK{set data = work_experience['de']}
+\section{Berufserfahrung}
+
+\noindent
+\BLOCK{ if data.current is not none }
+\BLOCK{ for station in data.current }
+\begin{tabularx}{\textwidth}{@{} X >{\raggedleft\arraybackslash}m{8em}}
+\textbf{\VAR{data.current[station].company}} & Since \DTMdate{\VAR{data.current[station].startdate}} \\
+\VAR{data.current[station].position} \\
+\end{tabularx}
+\BLOCK{ if data.current[station].achievements}
+\BLOCK{set achievements = data.current[station].achievements}
+\begin{itemize}
+\BLOCK{ for achievement in achievements}
+\item \VAR{achievement}
+\BLOCK{ endfor }
+\end{itemize}
+\BLOCK{ endif }
+\vspace{5pt}
+\BLOCK{ endfor }
+\BLOCK{ endif }
+
+\noindent
+\BLOCK{ if data.former is not none }
+\BLOCK{for station in data.former}
+\begin{tabularx}{\textwidth}{@{} X >{\raggedleft\arraybackslash}m{8em}}
+\textbf{\VAR{data.former[station].company}} & \DTMdate{\VAR{data.former[station].startdate}} - \DTMdate{\VAR{data.former[station].enddate}} \\
+\VAR{data.former[station].position} & \\
+\end{tabularx}
+\BLOCK{ if data.former[station].achievements}
+\BLOCK{set achievements = data.former[station].achievements}
+\begin{itemize}
+\BLOCK{ for achievement in achievements}
+\item \VAR{achievement}
+\BLOCK{ endfor }
+\end{itemize}
+\BLOCK{ endif }
+\vspace{5pt}
+\BLOCK{ endfor }
+\BLOCK{ endif }
+\BLOCK{endif}
+
+%
 % Education
 %
 \BLOCK{if education}\BLOCK{set data = education['de']}
@@ -101,52 +146,6 @@ Since {\DTMsetdatestyle{yearonly}\DTMdate{\VAR{data.current[station].date}}} \\
 \BLOCK{endfor}
 \BLOCK{endif}
 \BLOCK{endif}
-
-%
-% Work experience
-%
-\BLOCK{if work_experience}\BLOCK{set data = work_experience['de']}
-\section{Berufserfahrung}
-
-\noindent
-\BLOCK{ if data.current is not none }
-\BLOCK{ for station in data.current }
-\begin{tabularx}{\textwidth}{@{} X >{\raggedleft\arraybackslash}m{8em}}
-\VAR{data.current[station].company} & Since \DTMdate{\VAR{data.current[station].startdate}} \\
-\textbf{\VAR{data.current[station].position}} \\
-\end{tabularx}
-\BLOCK{ if data.current[station].achievements}
-\BLOCK{set achievements = data.current[station].achievements}
-\begin{itemize}
-\BLOCK{ for achievement in achievements}
-\item \VAR{achievement}
-\BLOCK{ endfor }
-\end{itemize}
-\BLOCK{ endif }
-\vspace{5pt}
-\BLOCK{ endfor }
-\BLOCK{ endif }
-
-\noindent
-\BLOCK{ if data.former is not none }
-\BLOCK{for station in data.former}
-\begin{tabularx}{\textwidth}{@{} X >{\raggedleft\arraybackslash}m{8em}}
-\textbf{\VAR{data.former[station].company}} & \DTMdate{\VAR{data.former[station].startdate}} - \DTMdate{\VAR{data.former[station].enddate}} \\
-\VAR{data.former[station].position} & \\
-\end{tabularx}
-\BLOCK{ if data.former[station].achievements}
-\BLOCK{set achievements = data.former[station].achievements}
-\begin{itemize}
-\BLOCK{ for achievement in achievements}
-\item \VAR{achievement}
-\BLOCK{ endfor }
-\end{itemize}
-\BLOCK{ endif }
-\vspace{5pt}
-\BLOCK{ endfor }
-\BLOCK{ endif }
-\BLOCK{endif}
-
 
 %
 % Software Projects
